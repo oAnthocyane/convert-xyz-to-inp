@@ -35,12 +35,23 @@ for xyz_file in xyz_files:
     el_xyz_file = open(xyz_file, "r")
     ans = get_coord(el_xyz_file)
     
-    name_xyz_file = xyz_file[:-4]
-    name_file_inp = name_xyz_file + ".inp"
+    name_file = xyz_file[:-4]
+    
+    dir_name = os.path.dirname(os.path.abspath(__name__))
+    
+    name_file_inp = name_file + ".inp"
     inp_file = open(name_file_inp, "w")
     template = writer(ans)
     inp_file.write(template)
 
     inp_file.close()
-    xyz_file.close()
+    el_xyz_file.close()
+    
+    os.mkdir(name_file)
+    first = dir_name + "\\" + xyz_file
+    second = dir_name + "\\" + name_file + "\\" + xyz_file
+    os.replace(first, second)
+    first = dir_name + "\\" + name_file_inp
+    second = dir_name + "\\" + name_file + "\\" + name_file_inp
+    os.replace(first, second)
 
