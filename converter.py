@@ -41,7 +41,7 @@ count_files = len(list_dir) - 1
 
 for i in range(count_files):
     counter = i+1
-    counter_s = ("0" + str(counter)) if counter < 10 else counter
+    counter_s = ("0" + str(counter)) if counter < 10 else str(counter)
     file_name = name_molecule + counter_s
 
     xyz_file_name = file_name + ".xyz"
