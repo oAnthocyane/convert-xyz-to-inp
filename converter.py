@@ -12,7 +12,7 @@ def get_coord(file):
 
 def writer(inp_file):
     template = f"""! r2scan-3c 
-! Opt TightOpt Freq
+! OptTs TightOpt Freq
 
 %pal nprocs 24 end
 
@@ -28,30 +28,19 @@ def writer(inp_file):
 
 
 list_dir = os.listdir()
+xyz_files = [file for file in list_dir if ".xyz" in file]
 
-for el in list_dir:
-    if ".xyz" in el:
-        name_molecule = el
-        break
-else:
-    assert "Not have files"
 
-name_molecule = name_molecule[:-6]
-count_files = len(list_dir) - 1
-
-for i in range(count_files):
-    counter = i+1
-    counter_s = ("0" + str(counter)) if counter < 10 else str(counter)
-    file_name = name_molecule + counter_s
-
-    xyz_file_name = file_name + ".xyz"
-    xyz_file = open(xyz_file_name, "r")
-    ans = get_coord(xyz_file)
+for xyz_file in xyz_files:
+    el_xyz_file = open(xyz_file, "r")
+    ans = get_coord(el_xyz_file)
     
-    inp_file_name = file_name + ".inp"
-    inp_file = open(inp_file_name, "w")
+    name_xyz_file = xyz_file[:-4]
+    name_file_inp = name_xyz_file + ".inp"
+    inp_file = open(name_file_inp, "w")
     template = writer(ans)
     inp_file.write(template)
 
     inp_file.close()
     xyz_file.close()
+
