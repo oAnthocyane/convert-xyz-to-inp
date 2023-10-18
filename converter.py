@@ -1,8 +1,9 @@
 import os
+import sys
 
 
-CHARGE = 0
-MULTIPLICITY = 1
+CHARGE = sys.argv[0]
+MULTIPLICITY = sys.argv[1]
 
 
 def get_coord(file):
@@ -10,48 +11,43 @@ def get_coord(file):
     return "\n".join(inp)
 
 
-def writer(inp_file):
-    template = f"""! r2scan-3c 
-! OptTs TightOpt Freq
-
-%pal nprocs 24 end
-
-%geom 
- Calc_Hess TRUE
- end
-
+def writer(calc_file, inp_file):
+    start_values = "".join(calc_file)
+    template = f"""{start_values}
 * xyz {CHARGE} {MULTIPLICITY}
 {inp_file}
 *
 """
     return template
 
+file_template_name = sys.argv[2]
+file_template = open(file_template_name, "r").readlines()
 
 list_dir = os.listdir()
-xyz_files = [file for file in list_dir if ".xyz" in file]
 
+for el in list_dir:
+    if ".xyz" in el:
+        name_molecule = el
+        break
+else:
+    assert "Not have files"
 
-for xyz_file in xyz_files:
-    el_xyz_file = open(xyz_file, "r")
-    ans = get_coord(el_xyz_file)
+name_molecule = name_molecule[:-6]
+count_files = len(list_dir) - 1
+
+for i in range(count_files):
+    counter = i+1
+    counter_s = ("0" + str(counter)) if counter < 10 else str(counter)
+    file_name = name_molecule + counter_s
+
+    xyz_file_name = file_name + ".xyz"
+    xyz_file = open(xyz_file_name, "r")
+    ans = get_coord(xyz_file)
     
-    name_file = xyz_file[:-4]
-    
-    dir_name = os.path.dirname(os.path.abspath(__name__))
-    
-    name_file_inp = name_file + ".inp"
-    inp_file = open(name_file_inp, "w")
-    template = writer(ans)
+    inp_file_name = file_name + ".inp"
+    inp_file = open(inp_file_name, "w")
+    template = writer(file_template, ans)
     inp_file.write(template)
 
     inp_file.close()
-    el_xyz_file.close()
-    
-    os.mkdir(name_file)
-    first = dir_name + "\\" + xyz_file
-    second = dir_name + "\\" + name_file + "\\" + xyz_file
-    os.replace(first, second)
-    first = dir_name + "\\" + name_file_inp
-    second = dir_name + "\\" + name_file + "\\" + name_file_inp
-    os.replace(first, second)
-
+    xyz_file.close()
