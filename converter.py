@@ -1,9 +1,10 @@
 import os
 import sys
 
+print(sys.argv[1], sys.argv[2], sys.argv[3])
 
-CHARGE = sys.argv[0]
-MULTIPLICITY = sys.argv[1]
+CHARGE = sys.argv[1]
+MULTIPLICITY = sys.argv[2]
 
 
 def get_coord(file):
@@ -20,7 +21,7 @@ def writer(calc_file, inp_file):
 """
     return template
 
-file_template_name = sys.argv[2]
+file_template_name = sys.argv[3]
 file_template = open(file_template_name, "r").readlines()
 
 list_dir = os.listdir()
@@ -31,9 +32,9 @@ for el in list_dir:
         break
 else:
     assert "Not have files"
-
+  
 name_molecule = name_molecule[:-6]
-count_files = len(list_dir) - 1
+count_files = len(list_dir) - 2
 
 for i in range(count_files):
     counter = i+1
@@ -51,3 +52,13 @@ for i in range(count_files):
 
     inp_file.close()
     xyz_file.close()
+    
+    dir_name = os.path.dirname(os.path.abspath(name))
+    os.mkdir(file_name)
+    first = dir_name + "\\" + xyz_file_name
+    second = dir_name + "\\" + file_name + "\\" + xyz_file_name
+    os.replace(first, second)
+    first = dir_name + "\\" + inp_file_name
+    second = dir_name + "\\" + file_name + "\\" + inp_file_name
+    os.replace(first, second)
+
