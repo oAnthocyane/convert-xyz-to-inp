@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 CHARGE = sys.argv[1]
 MULTIPLICITY = sys.argv[2]
 
@@ -31,16 +32,13 @@ for el in list_dir:
 else:
     assert "Not have files"
   
-name_molecule = name_molecule[:-6]
-count_files = len(list_dir) - 2
-
-for i in range(count_files):
-    counter = i+1
-    counter_s = ("0" + str(counter)) if counter < 10 else str(counter)
-    file_name = name_molecule + counter_s
-
-    xyz_file_name = file_name + ".xyz"
-    xyz_file = open(xyz_file_name, "r")
+for name_molecule in list_dir:
+    extension = name_molecule[-3:]
+    if extension != "xyz": continue
+    
+    file_name = name_molecule[:-4]
+        
+    xyz_file = open(name_molecule, "r")
     ans = get_coord(xyz_file)
     
     inp_file_name = file_name + ".inp"
@@ -53,8 +51,8 @@ for i in range(count_files):
     
     dir_name = os.path.dirname(os.path.abspath(name))
     os.mkdir(file_name)
-    first = dir_name + "\\" + xyz_file_name
-    second = dir_name + "\\" + file_name + "\\" + xyz_file_name
+    first = dir_name + "\\" + name_molecule
+    second = dir_name + "\\" + file_name + "\\" + name_molecule
     os.replace(first, second)
     first = dir_name + "\\" + inp_file_name
     second = dir_name + "\\" + file_name + "\\" + inp_file_name
