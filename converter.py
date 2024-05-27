@@ -1,12 +1,13 @@
 import os
 import sys
+import shutil
 
 CHARGE = sys.argv[1]
 MULTIPLICITY = sys.argv[2]
 
 def get_coord(file):
     inp = file.readlines()[2:]
-    return "\n".join(inp)
+    return "".join(inp)
 
 def writer(calc_file, inp_file):
     start_values = "".join(calc_file)
@@ -48,7 +49,7 @@ for name_molecule in list_dir:
     os.mkdir(file_name)
     first = os.path.join(dir_name, name_molecule)
     second = os.path.join(dir_name, file_name, name_molecule)
-    os.replace(first, second)
+    shutil.copy(first, second)
     first = os.path.join(dir_name, inp_file_name)
     second = os.path.join(dir_name, file_name, inp_file_name)
     os.replace(first, second)
